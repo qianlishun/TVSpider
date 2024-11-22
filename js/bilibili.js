@@ -78,7 +78,7 @@ class BilibiliSpider extends Spider {
     }
 
     getName() {
-        return "🏰┃哔哩哔哩┃🏰"
+        return `🏰┃哔哩哔哩┃🏰`
     }
 
     getAppName() {

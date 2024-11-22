@@ -80,7 +80,7 @@ class KuaiKanSpider extends Spider {
     }
 
     getName() {
-        return "🛥︎┃快看视频┃🛥︎"
+        return `🛥︎┃快看视频┃🛥︎`
     }
 
     getAppName() {

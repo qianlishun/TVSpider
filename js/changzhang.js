@@ -42,7 +42,7 @@ class ChangZhangSpider extends Spider {
 
 
     getName() {
-        return "🏭️┃厂长直连┃🏭️"
+        return `🏭️┃厂长直连┃🏭️`
     }
 
     getAppName() {

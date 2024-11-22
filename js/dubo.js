@@ -19,7 +19,7 @@ class DuboSpider extends TianTianSpider {
     }
 
     getName() {
-        return "🛶┃独播影视┃🛶"
+        return `🛶┃独播影视┃🛶`
     }
     getAppName() {
         return "独播影视"

@@ -18,7 +18,7 @@ class PanSearchSpider extends Spider {
     }
 
     getName() {
-        return "🗂️┃阿里盘搜┃🗂️"
+        return `🗂️┃阿里盘搜┃🗂️`
     }
 
     getAppName() {

@@ -23,7 +23,7 @@ class NewVisionSpider extends Spider {
     }
 
     getName() {
-        return "🐼┃新视觉影院┃🐼"
+        return `🐼┃新视觉影院┃🐼`
     }
     getJSName() {
         return "newvision"

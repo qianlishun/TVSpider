@@ -23,7 +23,7 @@ class CiliXiongSpider extends Spider {
     }
 
     getName() {
-        return "🐻┃磁力熊┃🐻"
+        return `🐻┃磁力熊┃🐻`
     }
 
     getJSName() {

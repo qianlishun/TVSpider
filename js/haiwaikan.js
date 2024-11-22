@@ -32,7 +32,7 @@ class HaiWaiKanSpider extends VodSpider {
     }
 
     getName() {
-        return "☕┃海外看┃☕墙"
+        return `☕┃海外看┃☕墙`
     }
 
     getJSName() {

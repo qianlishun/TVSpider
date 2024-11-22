@@ -21,7 +21,7 @@ class CNTVSpider extends Spider {
     }
 
     getName() {
-        return "🤵‍♂️┃中央影视┃🤵‍♂️"
+        return `🤵‍♂️┃中央影视┃🤵‍♂️`
     }
 
     getAppName() {

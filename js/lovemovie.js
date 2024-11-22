@@ -20,7 +20,7 @@ class LoveMovieSpider extends Spider {
     }
 
     getName() {
-        return "💕┃爱情电影网┃💕"
+        return `💕┃爱情电影网┃💕`
     }
 
     getAppName() {

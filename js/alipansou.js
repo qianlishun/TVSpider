@@ -28,7 +28,7 @@ class GitCafeSpider extends Spider {
 
 
     getName() {
-        return "😸┃阿里猫狸┃😸"
+        return `😸┃阿里猫狸┃😸`
     }
 
     getAppName() {

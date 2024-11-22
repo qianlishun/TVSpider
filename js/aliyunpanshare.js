@@ -26,7 +26,7 @@ class AliyunpanShare extends Spider {
     }
 
     getName() {
-        return "🥏‍┃阿里云盘分享┃🥏‍"
+        return `🥏‍┃阿里云盘分享┃🥏‍`
     }
 
     getAppName() {

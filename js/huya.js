@@ -23,7 +23,7 @@ class HuyaSpider extends Spider {
     }
 
     getName() {
-        return "🐯┃虎牙直播┃🐯"
+        return `🐯┃虎牙直播┃🐯`
     }
 
     getAppName() {
