@@ -24,7 +24,7 @@ class RRYSSpider extends Spider {
             method: 'get',
             headers: {
                 'User-Agent': agentSp || UA,
-                'Referer': HOST
+                'Referer': this.siteUrl
             },
         });
         return res.data;
@@ -73,7 +73,7 @@ class RRYSSpider extends Spider {
     
     async setCategory(tid, pg, filter, extend) {
         if (pg <= 0) pg = 1;
-        const link = HOST + '/rrtop/' + (extend.cateId || tid) + (extend.area || '') + (extend.by || '/by/time') + '/page/' + pg + (extend.year || '') + '.html';//https://www.rttks.com/rrtop/dzp/area/%E7%BE%8E%E5%9B%BD/class//page/2/year/2022.html
+        const link = this.siteUrl + '/rrtop/' + (extend.cateId || tid) + (extend.area || '') + (extend.by || '/by/time') + '/page/' + pg + (extend.year || '') + '.html';//https://www.rttks.com/rrtop/dzp/area/%E7%BE%8E%E5%9B%BD/class//page/2/year/2022.html
         const html = await request(link);
         const $ = load(html);
         const items = $('ul.stui-vodlist li');
@@ -81,7 +81,7 @@ class RRYSSpider extends Spider {
     }
 
     async setDetail(id) {
-        const html = await request( HOST + '/rrtv/' + id + '.html');
+        const html = await request( this.siteUrl + '/rrtv/' + id + '.html');
         const $ = load(html);
         ShiftJISDecoder.VodDetail = await this.parseVodDetailFromDoc($);
     }
@@ -89,7 +89,7 @@ class RRYSSpider extends Spider {
     async setSearch(wd, quick) {
         let pg = inReq.body.page;
         if (pg <= 0) pg = 1;
-        let data = await request(HOST + '/rrcz' + wd + '/page/' + pg + '.html');//https://www.rttks.com/rrcz%E6%88%91/page/2.html
+        let data = await request(this.siteUrl + '/rrcz' + wd + '/page/' + pg + '.html');//https://www.rttks.com/rrcz%E6%88%91/page/2.html
         const $ = load(data);
         const items = $('ul.stui-vodlist__media li');
         this.vodList = await this.parseVodShortListFromDocByCategory(items);
