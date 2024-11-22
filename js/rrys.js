@@ -11,23 +11,18 @@ import {_} from "../lib/cat.js";
 import * as Utils from "../lib/utils.js";
 import {VodDetail, VodShort} from "../lib/vod.js";
 
-const UA = 'Mozilla/5.0 (Linux; Android 10; HLK-AL00 Build/HONORHLK-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.93 Mobile Safari/537.36';
-
 class RRYSSpider extends Spider {
     constructor() {
         super();
         this.siteUrl = "https://www.rttks.com"
     }
+    async request(reqUrl) {
+        let content = await this.fetch(reqUrl, null, this.getHeader());
+        return content;
+    }
 
-    async request(reqUrl, agentSp) {
-        let res = await req(reqUrl, {
-            method: 'get',
-            headers: {
-                'User-Agent': agentSp || UA,
-                'Referer': this.siteUrl
-            },
-        });
-        return res.data;
+    getHeader() {
+        return {"User-Agent": Utils.CHROME, "Referer": this.siteUrl + "/","Connection":"keep-alive"};
     }
 
     getName() {
@@ -67,7 +62,7 @@ class RRYSSpider extends Spider {
     }
    
     async setHomeVod() {
-        let response = await this.getHtml(this.siteUrl+'/rrdq/dianying.html');
+        let response = await this.fetch(this.siteUrl+'/rrdq/dianying.html',null, this.getHeader());
         this.homeVodList = await this.parseVodShortListFromDoc(JSON.parse(response))
     }
     
@@ -111,7 +106,7 @@ class RRYSSpider extends Spider {
     async parseVodShortListFromDocByCategory(items) {
         let vod_list = []
 
-        _.map(items, (item) => {
+        for (const item of items){
             let vodShort = new VodShort();
 
             const it = $(item).find('a:first')[0];
@@ -123,7 +118,7 @@ class RRYSSpider extends Spider {
             vodShort.vod_remarks = remarks || '';
 
             vod_list.push(vodShort);
-        });
+        };
         return vod_list
     }
 
