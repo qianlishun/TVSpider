@@ -208,7 +208,7 @@ async function home(filter) {
 }
 
 async function homeVod() {
-    return await spider.home()
+    return await spider.homeVod()
 }
 
 async function category(tid, pg, filter, extend) {
