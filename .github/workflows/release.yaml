@@ -161,17 +161,17 @@ jobs:
           commit_msg="* 发布 CatVodOpen 18+ 新源"
           git commit -a -m "$commit_msg"
       
-      - name: Push NodelJS Config Changes To Gitee
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GE_TOKEN }}
-          repository: ${{ secrets.GE_PATH }}
-          directory: .
-          branch: 18_dist
-          force: true
-          github_url: https://gitee.com
-        env:
-          GITHUB_ACTOR: ${{ secrets.GH_ACTOR }}
+      # - name: Push NodelJS Config Changes To Gitee
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GE_TOKEN }}
+      #     repository: ${{ secrets.GE_PATH }}
+      #     directory: .
+      #     branch: 18_dist
+      #     force: true
+      #     github_url: https://gitee.com
+      #   env:
+      #     GITHUB_ACTOR: ${{ secrets.GH_ACTOR }}
 
       - name: Push NodelJS Config Changes To Github
         uses: ad-m/github-push-action@master
