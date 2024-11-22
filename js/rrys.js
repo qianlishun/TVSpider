@@ -84,7 +84,6 @@ class RRYSSpider extends Spider {
     }
     
     async setCategory(tid, pg, filter, extend) {
-        const extend = inReq.body.filters;
         if (pg <= 0) pg = 1;
         const link = HOST + '/rrtop/' + (extend.cateId || tid) + (extend.area || '') + (extend.by || '/by/time') + '/page/' + pg + (extend.year || '') + '.html';//https://www.rttks.com/rrtop/dzp/area/%E7%BE%8E%E5%9B%BD/class//page/2/year/2022.html
         const html = await request(link);
