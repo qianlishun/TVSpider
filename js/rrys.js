@@ -15,44 +15,44 @@ import {VodDetail, VodShort} from "../lib/vod.js";
 class RRYSSpider extends Spider {
     constructor() {
         super();
-        this.siteUrl = "https://www.rttks.com"
+        this.siteUrl = "https://www.rttks.com";
     }
   
-    async request(reqUrl, params, headers, redirect_url = false, return_cookie = false, buffer = 0, proxy = false) {
-        let data = Utils.objectToStr(params)
-        let url = reqUrl
-        if (!_.isEmpty(data)) {
-            url = reqUrl + "?" + data
-        }
-        let uri = new Uri(url);
-        let response;
-        if (redirect_url) {
-            response = await req(uri.toString(), {
-                method: "get", headers: headers, buffer: buffer, data: null, redirect: 2, proxy: proxy
-            })
-        } else {
-            response = await req(uri.toString(), {method: "get", headers: headers, buffer: buffer, data: null,proxy:proxy,timeout:10000});
-        }
-        if (response.code === 200 || response.status === 200 || response.code === 302 || response.code === 301 || return_cookie) {
-            return await this.getResponse(reqUrl, params, headers, redirect_url, return_cookie, buffer, response,proxy)
-        } else {
-            await this.jadeLog.error(`请求失败,失败原因为:状态码出错,请求url为:${uri},回复内容为:${JSON.stringify(response)}`)
-            return await this.reconnnect(reqUrl, params, headers, redirect_url, return_cookie, buffer, response,proxy)
-        }
-    }
+    // async request(reqUrl, params, headers, redirect_url = false, return_cookie = false, buffer = 0, proxy = false) {
+    //     let data = Utils.objectToStr(params)
+    //     let url = reqUrl
+    //     if (!_.isEmpty(data)) {
+    //         url = reqUrl + "?" + data
+    //     }
+    //     let uri = new Uri(url);
+    //     let response;
+    //     if (redirect_url) {
+    //         response = await req(uri.toString(), {
+    //             method: "get", headers: headers, buffer: buffer, data: null, redirect: 2, proxy: proxy
+    //         })
+    //     } else {
+    //         response = await req(uri.toString(), {method: "get", headers: headers, buffer: buffer, data: null,proxy:proxy,timeout:10000});
+    //     }
+    //     if (response.code === 200 || response.status === 200 || response.code === 302 || response.code === 301 || return_cookie) {
+    //         return await this.getResponse(reqUrl, params, headers, redirect_url, return_cookie, buffer, response,proxy)
+    //     } else {
+    //         await this.jadeLog.error(`请求失败,失败原因为:状态码出错,请求url为:${uri},回复内容为:${JSON.stringify(response)}`)
+    //         return await this.reconnnect(reqUrl, params, headers, redirect_url, return_cookie, buffer, response,proxy)
+    //     }
+    // }
 
-    async getHtml(url = this.siteUrl, proxy = false, headers = this.getHeader()) {
-        let html = await this.request(url, null, headers, false, false, 0, proxy)
-        // await this.jadeLog.info(html)
-        if (!_.isEmpty(html)) {
-            return load(html)
-        } else {
-            await this.jadeLog.error(`html获取失败`, true)
-        }
-    }
+    // async getHtml(url = this.siteUrl, proxy = false, headers = this.getHeader()) {
+    //     let html = await this.request(url, null, headers, false, false, 0, proxy)
+    //     // await this.jadeLog.info(html)
+    //     if (!_.isEmpty(html)) {
+    //         return load(html)
+    //     } else {
+    //         await this.jadeLog.error(`html获取失败`, true)
+    //     }
+    // }
 
     getHeader() {
-        return {"User-Agent": Utils.CHROME, "Referer": this.siteUrl + "/","Connection":"keep-alive"};
+        return {"User-Agent": Utils.MOBILEUA, "Referer": this.siteUrl + "/"};
     }
 
     getName() {
@@ -76,50 +76,50 @@ class RRYSSpider extends Spider {
         this.danmuStaus = true
     }
 
-    async home(filter) {
-        let classes = [{"type_id":"dianying","type_name":"电影"},{"type_id":"dianshiju","type_name":"追剧"},{"type_id":"zongyi","type_name":"综艺"},{"type_id":"dongman","type_name":"动漫"},{"type_id":"jilupian","type_name":"纪录片"}];
-        let filterObj = {
+    async setClasses() {
+        this.classes = [{"type_id":"dianying","type_name":"电影"},{"type_id":"dianshiju","type_name":"追剧"},{"type_id":"zongyi","type_name":"综艺"},{"type_id":"dongman","type_name":"动漫"},{"type_id":"jilupian","type_name":"纪录片"}];
+    }
+
+    async setFilterObj(){
+        this.filterObj = {
             "dianying":[{"key":"cateId","name":"类型",'init':'',"value":[{"n":"全部","v":""},{"n":"剧情","v":"jqp"},{"n":"喜剧","v":"xjp"},{"n":"动作","v":"dzp"},{"n":"爱情","v":"aqp"},{"n":"科幻","v":"khp"},{"n":"恐怖","v":"kbp"},{"n":"战争","v":"zzp"}]},{"key":"area","name":"地区",'init':'',"value":[{"n":"全部","v":""},{"n":"中国大陆","v":"/area/大陆"},{"n":"中国香港","v":"/area/香港"},{"n":"中国台湾","v":"/area/台湾"},{"n":"美国","v":"/area/美国"},{"n":"韩国","v":"/area/韩国"},{"n":"日本","v":"/area/日本"},{"n":"泰国","v":"/area/泰国"},{"n":"新加坡","v":"/area/新加坡"},{"n":"马来西亚","v":"/area/马来西亚"},{"n":"印度","v":"/area/印度"},{"n":"英国","v":"/area/英国"},{"n":"法国","v":"/area/法国"},{"n":"加拿大","v":"/area/加拿大"},{"n":"西班牙","v":"/area/西班牙"},{"n":"俄罗斯","v":"/area/俄罗斯"},{"n":"澳大利亚","v":"/area/澳大利亚"}]},{"key":"year","name":"时间",'init':'',"value":[{"n":"全部","v":""},{"n":"2024","v":"/year/2024"},{"n":"2023","v":"/year/2023"},{"n":"2022","v":"/year/2022"},{"n":"2021","v":"/year/2021"},{"n":"2020","v":"/year/2020"},{"n":"2019","v":"/year/2019"},{"n":"2018","v":"/year/2018"},{"n":"2017","v":"/year/2017"},{"n":"2016","v":"/year/2016"},{"n":"2015","v":"/year/2015"},{"n":"2014","v":"/year/2014"},{"n":"2013","v":"/year/2013"},{"n":"2012","v":"/year/2012"},{"n":"2011","v":"/year/2011"},{"n":"2010","v":"/year/2010"},{"n":"2009","v":"/year/2009"},{"n":"2008","v":"/year/2008"},{"n":"2007","v":"/year/2007"},{"n":"2006","v":"/year/2006"},{"n":"2005","v":"/year/2005"}]},{"key":"by","name":"排序",'init':'',"value":[{"n":"全部","v":""},{"n":"时间","v":"/by/time"},{"n":"人气","v":"/by/hits"},{"n":"评分","v":"/by/score"}]}],
             "dianshiju":[{"key":"cateId","name":"类型",'init':'',"value":[{"n":"全部","v":""},{"n":"国产剧","v":"gcj"},{"n":"港台剧","v":"gtj"},{"n":"日韩剧","v":"rhj"},{"n":"海外剧","v":"hwj"}]},{"key":"area","name":"地区",'init':'',"value":[{"n":"全部","v":""},{"n":"中国大陆","v":"/area/大陆"},{"n":"中国香港","v":"/area/香港"},{"n":"中国台湾","v":"/area/台湾"},{"n":"美国","v":"/area/美国"},{"n":"韩国","v":"/area/韩国"},{"n":"日本","v":"/area/日本"},{"n":"泰国","v":"/area/泰国"},{"n":"新加坡","v":"/area/新加坡"},{"n":"马来西亚","v":"/area/马来西亚"},{"n":"印度","v":"/area/印度"},{"n":"英国","v":"/area/英国"},{"n":"法国","v":"/area/法国"},{"n":"加拿大","v":"/area/加拿大"},{"n":"西班牙","v":"/area/西班牙"},{"n":"俄罗斯","v":"/area/俄罗斯"},{"n":"澳大利亚","v":"/area/澳大利亚"}]},{"key":"year","name":"时间",'init':'',"value":[{"n":"全部","v":""},{"n":"2024","v":"/year/2024"},{"n":"2023","v":"/year/2023"},{"n":"2022","v":"/year/2022"},{"n":"2021","v":"/year/2021"},{"n":"2020","v":"/year/2020"},{"n":"2019","v":"/year/2019"},{"n":"2018","v":"/year/2018"},{"n":"2017","v":"/year/2017"},{"n":"2016","v":"/year/2016"},{"n":"2015","v":"/year/2015"},{"n":"2014","v":"/year/2014"},{"n":"2013","v":"/year/2013"},{"n":"2012","v":"/year/2012"},{"n":"2011","v":"/year/2011"},{"n":"2010","v":"/year/2010"},{"n":"2009","v":"/year/2009"},{"n":"2008","v":"/year/2008"},{"n":"2007","v":"/year/2007"},{"n":"2006","v":"/year/2006"},{"n":"2005","v":"/year/2005"}]},{"key":"by","name":"排序",'init':'',"value":[{"n":"全部","v":""},{"n":"时间","v":"/by/time"},{"n":"人气","v":"/by/hits"},{"n":"评分","v":"/by/score"}]}],
             "dongman":[{"key":"area","name":"地区",'init':'',"value":[{"n":"全部","v":""},{"n":"中国大陆","v":"/area/大陆"},{"n":"中国香港","v":"/area/香港"},{"n":"中国台湾","v":"/area/台湾"},{"n":"美国","v":"/area/美国"},{"n":"韩国","v":"/area/韩国"},{"n":"日本","v":"/area/日本"},{"n":"泰国","v":"/area/泰国"},{"n":"新加坡","v":"/area/新加坡"},{"n":"马来西亚","v":"/area/马来西亚"},{"n":"印度","v":"/area/印度"},{"n":"英国","v":"/area/英国"},{"n":"法国","v":"/area/法国"},{"n":"加拿大","v":"/area/加拿大"},{"n":"西班牙","v":"/area/西班牙"},{"n":"俄罗斯","v":"/area/俄罗斯"},{"n":"澳大利亚","v":"/area/澳大利亚"}]},{"key":"year","name":"时间",'init':'',"value":[{"n":"全部","v":""},{"n":"2024","v":"/year/2024"},{"n":"2023","v":"/year/2023"},{"n":"2022","v":"/year/2022"},{"n":"2021","v":"/year/2021"},{"n":"2020","v":"/year/2020"},{"n":"2019","v":"/year/2019"},{"n":"2018","v":"/year/2018"},{"n":"2017","v":"/year/2017"},{"n":"2016","v":"/year/2016"},{"n":"2015","v":"/year/2015"},{"n":"2014","v":"/year/2014"},{"n":"2013","v":"/year/2013"},{"n":"2012","v":"/year/2012"},{"n":"2011","v":"/year/2011"},{"n":"2010","v":"/year/2010"},{"n":"2009","v":"/year/2009"},{"n":"2008","v":"/year/2008"},{"n":"2007","v":"/year/2007"},{"n":"2006","v":"/year/2006"},{"n":"2005","v":"/year/2005"}]},{"key":"by","name":"排序",'init':'',"value":[{"n":"全部","v":""},{"n":"时间","v":"/by/time"},{"n":"人气","v":"/by/hits"},{"n":"评分","v":"/by/score"}]}],
             "zongyi":[{"key":"area","name":"地区",'init':'',"value":[{"n":"全部","v":""},{"n":"中国大陆","v":"/area/大陆"},{"n":"中国香港","v":"/area/香港"},{"n":"中国台湾","v":"/area/台湾"},{"n":"美国","v":"/area/美国"},{"n":"韩国","v":"/area/韩国"},{"n":"日本","v":"/area/日本"},{"n":"泰国","v":"/area/泰国"},{"n":"新加坡","v":"/area/新加坡"},{"n":"马来西亚","v":"/area/马来西亚"},{"n":"印度","v":"/area/印度"},{"n":"英国","v":"/area/英国"},{"n":"法国","v":"/area/法国"},{"n":"加拿大","v":"/area/加拿大"},{"n":"西班牙","v":"/area/西班牙"},{"n":"俄罗斯","v":"/area/俄罗斯"},{"n":"澳大利亚","v":"/area/澳大利亚"}]},{"key":"year","name":"时间",'init':'',"value":[{"n":"全部","v":""},{"n":"2024","v":"/year/2024"},{"n":"2023","v":"/year/2023"},{"n":"2022","v":"/year/2022"},{"n":"2021","v":"/year/2021"},{"n":"2020","v":"/year/2020"},{"n":"2019","v":"/year/2019"},{"n":"2018","v":"/year/2018"},{"n":"2017","v":"/year/2017"},{"n":"2016","v":"/year/2016"},{"n":"2015","v":"/year/2015"},{"n":"2014","v":"/year/2014"},{"n":"2013","v":"/year/2013"},{"n":"2012","v":"/year/2012"},{"n":"2011","v":"/year/2011"},{"n":"2010","v":"/year/2010"},{"n":"2009","v":"/year/2009"},{"n":"2008","v":"/year/2008"},{"n":"2007","v":"/year/2007"},{"n":"2006","v":"/year/2006"},{"n":"2005","v":"/year/2005"}]},{"key":"by","name":"排序",'init':'',"value":[{"n":"全部","v":""},{"n":"时间","v":"/by/time"},{"n":"人气","v":"/by/hits"},{"n":"评分","v":"/by/score"}]}],
              "jilupian":[{"key":"area","name":"地区",'init':'',"value":[{"n":"全部","v":""},{"n":"中国大陆","v":"/area/大陆"},{"n":"中国香港","v":"/area/香港"},{"n":"中国台湾","v":"/area/台湾"},{"n":"美国","v":"/area/美国"},{"n":"韩国","v":"/area/韩国"},{"n":"日本","v":"/area/日本"},{"n":"泰国","v":"/area/泰国"},{"n":"新加坡","v":"/area/新加坡"},{"n":"马来西亚","v":"/area/马来西亚"},{"n":"印度","v":"/area/印度"},{"n":"英国","v":"/area/英国"},{"n":"法国","v":"/area/法国"},{"n":"加拿大","v":"/area/加拿大"},{"n":"西班牙","v":"/area/西班牙"},{"n":"俄罗斯","v":"/area/俄罗斯"},{"n":"澳大利亚","v":"/area/澳大利亚"}]},{"key":"year","name":"时间",'init':'',"value":[{"n":"全部","v":""},{"n":"2024","v":"/year/2024"},{"n":"2023","v":"/year/2023"},{"n":"2022","v":"/year/2022"},{"n":"2021","v":"/year/2021"},{"n":"2020","v":"/year/2020"},{"n":"2019","v":"/year/2019"},{"n":"2018","v":"/year/2018"},{"n":"2017","v":"/year/2017"},{"n":"2016","v":"/year/2016"},{"n":"2015","v":"/year/2015"},{"n":"2014","v":"/year/2014"},{"n":"2013","v":"/year/2013"},{"n":"2012","v":"/year/2012"},{"n":"2011","v":"/year/2011"},{"n":"2010","v":"/year/2010"},{"n":"2009","v":"/year/2009"},{"n":"2008","v":"/year/2008"},{"n":"2007","v":"/year/2007"},{"n":"2006","v":"/year/2006"},{"n":"2005","v":"/year/2005"}]},{"key":"by","name":"排序",'init':'',"value":[{"n":"全部","v":""},{"n":"时间","v":"/by/time"},{"n":"人气","v":"/by/hits"},{"n":"评分","v":"/by/score"}]}]
         }
-        return JSON.stringify({
-            class: classes,
-            filters: filterObj,
-        });
-    }
+     }
+    
     async setHomeVod() {
-        let $ = await this.getHtml(this.siteUrl+'/rrdq/dianying.html',null, this.getHeader());
-        
-        this.homeVodList = await this.parseVodShortListFromDoc($);
+        let html = await this.fetch(this.siteUrl, null, this.getHeader())
+        if (!_.isEmpty(html)) {
+            let $ = load(html)
+            this.homeVodList = await this.parseVodShortListFromDoc($);
+        }
     }
     
     async setCategory(tid, pg, filter, extend) {
         if (pg <= 0) pg = 1;
         const link = this.siteUrl + '/rrtop/' + (extend.cateId || tid) + (extend.area || '') + (extend.by || '/by/time') + '/page/' + pg + (extend.year || '') + '.html';//https://www.rttks.com/rrtop/dzp/area/%E7%BE%8E%E5%9B%BD/class//page/2/year/2022.html
-        const html = await this.request(link);
+        const html = await this.fetch(link,null,this.getHeader());
         const $ = load(html);
         const items = $('ul.stui-vodlist li');
         this.vodList = await this.parseVodShortListFromDocByCategory(items);
     }
 
     async setDetail(id) {
-        const html = await this.request( this.siteUrl + '/rrtv/' + id + '.html');
+        const html = await this.fetch( this.siteUrl + '/rrtv/' + id + '.html',nul, this.getHeader());
         const $ = load(html);
         ShiftJISDecoder.VodDetail = await this.parseVodDetailFromDoc($);
     }
     
-    async setSearch(wd, quick) {
-        let pg = inReq.body.page;
+    async setSearch(wd, quick, pg) {
         if (pg <= 0) pg = 1;
-        let data = await this.request(this.siteUrl + '/rrcz' + wd + '/page/' + pg + '.html');//https://www.rttks.com/rrcz%E6%88%91/page/2.html
+        let data = await this.fetch(this.siteUrl + '/rrcz' + wd + '/page/' + pg + '.html',null, this.getHeader());//https://www.rttks.com/rrcz%E6%88%91/page/2.html
         const $ = load(data);
         const items = $('ul.stui-vodlist__media li');
         this.vodList = await this.parseVodShortListFromDocByCategory(items);
     }
-
 
     async parseVodShortListFromDoc($) {
         let vod_list = []
@@ -155,8 +155,6 @@ class RRYSSpider extends Spider {
     async parseVodDetailFromDoc($) {
         let vodDetail = new VodDetail();
 
-        let html = $.html()
-
         vodDetail.type_name = $('.col-md-wide-75 h2').text().trim();
         vodDetail.vod_name = $('.stui-content__detail p:nth-child(4)').text();
         vodDetail.vod_actor = $('.stui-content__detail p:nth-child(2)').text().replace('上映：剧情：', '');
@@ -191,13 +189,13 @@ class RRYSSpider extends Spider {
         return vodDetail
     }
         
-    async testCategory() {
-        const link =  "https://www.rttks.com/rrtop/dzp/area/%E7%BE%8E%E5%9B%BD/class/page/2/year/2022.html"
-        const html = await this.request(link);
-        const $ = load(html);
-        const items = $('ul.stui-vodlist li');
-        this.vodList = await this.parseVodShortListFromDocByCategory(items);
-    }
+    // async testCategory() {
+    //     const link =  "https://www.rttks.com/rrtop/dzp/area/%E7%BE%8E%E5%9B%BD/class/page/2/year/2022.html"
+    //     const html = await this.request(link);
+    //     const $ = load(html);
+    //     const items = $('ul.stui-vodlist li');
+    //     this.vodList = await this.parseVodShortListFromDocByCategory(items);
+    // }
 }
 
 let spider = new RRYSSpider()
