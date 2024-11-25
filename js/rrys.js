@@ -16,40 +16,7 @@ class RRYSSpider extends Spider {
     constructor() {
         super();
         this.siteUrl = "https://www.rttks.com";
-    }
-  
-    // async request(reqUrl, params, headers, redirect_url = false, return_cookie = false, buffer = 0, proxy = false) {
-    //     let data = Utils.objectToStr(params)
-    //     let url = reqUrl
-    //     if (!_.isEmpty(data)) {
-    //         url = reqUrl + "?" + data
-    //     }
-    //     let uri = new Uri(url);
-    //     let response;
-    //     if (redirect_url) {
-    //         response = await req(uri.toString(), {
-    //             method: "get", headers: headers, buffer: buffer, data: null, redirect: 2, proxy: proxy
-    //         })
-    //     } else {
-    //         response = await req(uri.toString(), {method: "get", headers: headers, buffer: buffer, data: null,proxy:proxy,timeout:10000});
-    //     }
-    //     if (response.code === 200 || response.status === 200 || response.code === 302 || response.code === 301 || return_cookie) {
-    //         return await this.getResponse(reqUrl, params, headers, redirect_url, return_cookie, buffer, response,proxy)
-    //     } else {
-    //         await this.jadeLog.error(`请求失败,失败原因为:状态码出错,请求url为:${uri},回复内容为:${JSON.stringify(response)}`)
-    //         return await this.reconnnect(reqUrl, params, headers, redirect_url, return_cookie, buffer, response,proxy)
-    //     }
-    // }
-
-    // async getHtml(url = this.siteUrl, proxy = false, headers = this.getHeader()) {
-    //     let html = await this.request(url, null, headers, false, false, 0, proxy)
-    //     // await this.jadeLog.info(html)
-    //     if (!_.isEmpty(html)) {
-    //         return load(html)
-    //     } else {
-    //         await this.jadeLog.error(`html获取失败`, true)
-    //     }
-    // }
+      }
 
     getHeader() {
         return {"User-Agent": Utils.MOBILEUA, "Referer": this.siteUrl + "/"};
@@ -73,7 +40,6 @@ class RRYSSpider extends Spider {
 
     async init(cfg) {
         await super.init(cfg);
-        this.danmuStaus = true
     }
 
     async setClasses() {
@@ -110,7 +76,7 @@ class RRYSSpider extends Spider {
     async setDetail(id) {
         const html = await this.fetch( this.siteUrl + '/rrtv/' + id + '.html',nul, this.getHeader());
         const $ = load(html);
-        ShiftJISDecoder.VodDetail = await this.parseVodDetailFromDoc($);
+        this.vodDetail = await this.parseVodDetailFromDoc($);
     }
     
     async setSearch(wd, quick, pg) {
