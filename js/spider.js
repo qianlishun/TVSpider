@@ -15,6 +15,8 @@ import * as HLS from "../lib/hls.js";
 import {hlsCache, tsCache} from "../lib/ffm3u8_open.js";
 import {DanmuSpider} from "../lib/danmuSpider.js";
 import { initCloud } from "../lib/cloud.js";
+import req from "../lib/req.js";
+
 class Result {
     constructor() {
         this.class = []
@@ -286,6 +288,10 @@ class Spider {
 
     async getResponse(reqUrl, params, headers, redirect_url, return_cookie, buffer, response,proxy) {
         {
+            let content = response.content;
+            if (response.content == null || response.content.length == 0){
+                content = response.data;
+            }
             if (response.headers["location"] !== undefined) {
                 if (redirect_url) {
                     await this.jadeLog.debug(`返回重定向连接:${response.headers["location"]}`)
@@ -293,16 +299,16 @@ class Spider {
                 } else {
                     return this.fetch(response.headers["location"], params, headers, redirect_url, return_cookie, buffer,proxy)
                 }
-            } else if (response.content.length > 0) {
+            } else if (content.length > 0) {
                 this.reconnectTimes = 0
                 if (return_cookie) {
-                    return {"cookie": response.headers["set-cookie"], "content": response.content}
+                    return {"cookie": response.headers["set-cookie"], "content": content}
                 } else {
-                    return response.content
+                    return content
                 }
             } else if (buffer === 1) {
                 this.reconnectTimes = 0
-                return response.content
+                return content
             } else {
                 await this.jadeLog.error(`请求失败,请求url为:${reqUrl},回复内容为:${JSON.stringify(response)}`)
                 return await this.reconnnect(reqUrl, params, headers, redirect_url, return_cookie, buffer,proxy)
@@ -326,7 +332,7 @@ class Spider {
         } else {
             response = await req(uri.toString(), {method: "get", headers: headers, buffer: buffer, data: null,proxy:proxy,timeout:10000});
         }
-        if (response.code === 200 || response.code === 302 || response.code === 301 || return_cookie) {
+        if (response.code === 200 || response.status === 200 || response.code === 302 || response.code === 301 || return_cookie) {
             return await this.getResponse(reqUrl, params, headers, redirect_url, return_cookie, buffer, response,proxy)
         } else {
             await this.jadeLog.error(`请求失败,失败原因为:状态码出错,请求url为:${uri},回复内容为:${JSON.stringify(response)}`)
@@ -344,13 +350,17 @@ class Spider {
         let response = await req(uri.toString(), {
             method: "post", headers: headers, data: params, postType: postType,buffer: buffer
         });
-        if (response.code === 200 || response.code === undefined || response.code === 302) {
+        if (response.code === 200 || response.status === 200 || response.code === undefined || response.code === 302) {
+            let content = response.content;
+            if (response.content == null || response.content.length == 0){
+                content = response.data;
+            }
             // 重定向
             if (response.headers["location"] !== undefined) {
                 return await this.redirect(response)
-            } else if (!_.isEmpty(response.content)) {
+            } else if (!_.isEmpty(content)) {
                 this.reconnectTimes = 0
-                return response.content
+                return content
             } else {
                 return await this.postReconnect(reqUrl, params, headers,postType,buffer)
             }

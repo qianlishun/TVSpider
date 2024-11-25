@@ -15,6 +15,7 @@
         "crypto-js": "^4.2.0",
         "log4js": "^6.9.1",
         "qs": "^6.11.2",
+        "req": "^0.1.4",
         "tunnel": "^0.0.6"
     },
     "devDependencies": {
