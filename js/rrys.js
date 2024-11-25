@@ -10,6 +10,22 @@ let HOST = 'https://www.rttks.com';
 
 const UA = 'Mozilla/5.0 (Linux; Android 10; HLK-AL00 Build/HONORHLK-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.93 Mobile Safari/537.36';
 
+function getName() {
+    return "人人影视"
+}
+
+function getAppName() {
+    return "人人影视"
+}
+
+function getJSName() {
+    return "rrys"
+}
+
+function getType() {
+    return 3
+}
+
 async function request(reqUrl, agentSp) {
     let res = await req(reqUrl, {
         method: 'get',
