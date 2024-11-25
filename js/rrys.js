@@ -5,7 +5,6 @@
 // import CryptoJS from 'crypto-js';
 // import dayjs from 'dayjs';
 // import Crypto from 'crypto-js';
-import {Spider} from "./spider.js";
 import {_, Crypto, load} from "../lib/cat.js";
 import {VodDetail, VodShort} from "../lib/vod.js";
 import * as Utils from "../lib/utils.js";

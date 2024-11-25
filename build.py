@@ -178,7 +178,11 @@ class Build():
         for fileName in fileList:
             jsName = fileName.split(".")[0]
             spiderList.append(jsName)
-            importStr = "import {} from './spider/{}/{}.js';\n".format(jsName, typeName, jsName)
+            importStr = ""
+            if jsName == "rrys":
+                importStr = ""
+            else:
+                importStr = "import {} from './spider/{}/{}.js';\n".format(jsName, typeName, jsName)
             writeRoutersContent = writeRoutersContent + importStr
         return writeRoutersContent,spiderList
 
