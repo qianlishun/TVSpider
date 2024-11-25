@@ -165,8 +165,6 @@ class RRYSSpider extends Spider {
 
 let spider = new RRYSSpider()
 
-spider.setHomeVod();
-
 async function init(cfg) {
     await spider.init(cfg)
 }

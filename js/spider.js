@@ -15,7 +15,6 @@ import * as HLS from "../lib/hls.js";
 import {hlsCache, tsCache} from "../lib/ffm3u8_open.js";
 import {DanmuSpider} from "../lib/danmuSpider.js";
 import { initCloud } from "../lib/cloud.js";
-import req from "../lib/req.js";
 
 class Result {
     constructor() {
