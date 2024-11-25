@@ -74,7 +74,7 @@ class RRYSSpider extends Spider {
     }
 
     async setDetail(id) {
-        const html = await this.fetch( this.siteUrl + '/rrtv/' + id + '.html',nul, this.getHeader());
+        const html = await this.fetch( this.siteUrl + '/rrtv/' + id + '.html',null, this.getHeader());
         const $ = load(html);
         this.vodDetail = await this.parseVodDetailFromDoc($);
     }
