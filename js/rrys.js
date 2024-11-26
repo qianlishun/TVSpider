@@ -1,3 +1,4 @@
+
 /*
 * @File     : tiantian.js
 * @Author   : jade
@@ -10,7 +11,6 @@ import {Spider} from "./spider.js";
 import {_, load, Uri} from "../lib/cat.js";
 import * as Utils from "../lib/utils.js";
 import {VodDetail, VodShort} from "../lib/vod.js";
-// import req from '../lib/req.js';
 
 class RRYSSpider extends Spider {
     constructor() {
@@ -70,7 +70,7 @@ class RRYSSpider extends Spider {
         const html = await this.fetch(link,null,this.getHeader());
         const $ = load(html);
         const items = $('ul.stui-vodlist li');
-        this.vodList = await this.parseVodShortListFromDocByCategory(items);
+        this.vodList = await this.parseVodShortListFromDocByCategory($,items);
     }
 
     async setDetail(id) {
@@ -84,7 +84,16 @@ class RRYSSpider extends Spider {
         let data = await this.fetch(this.siteUrl + '/rrcz' + wd + '/page/' + pg + '.html',null, this.getHeader());//https://www.rttks.com/rrcz%E6%88%91/page/2.html
         const $ = load(data);
         const items = $('ul.stui-vodlist__media li');
-        this.vodList = await this.parseVodShortListFromDocByCategory(items);
+        this.vodList = await this.parseVodShortListFromDocByCategory($,items);
+    }
+
+    async setPlay(flag, id, flags){
+        let html = await this.fetch(this.siteUrl + '/rrplay/' + id + '.html', null,this.getHeader())
+        if (!_.isEmpty(html)){
+            const $ = load(html);
+            const js = JSON.parse($('script:contains(player_)').html().replace('var player_aaaa=',''));
+            this.playUrl = decodeURIComponent(Utils.base64Decode(js.url));        
+        }
     }
 
     async parseVodShortListFromDoc($) {
@@ -93,13 +102,13 @@ class RRYSSpider extends Spider {
         for (const vodElement of vodElements){
             let vodShort = new VodShort();
             vodShort.vod_name = vodElement.attribs.title
-            vodShort.vod_id = vodElement.attribs.href
+            vodShort.vod_id = vodElement.attribs.href.replace(/.*?\/rrtv\/(.*).html/g, '$1');
             vodShort.vod_pic = this.jsBase + Utils.base64Encode(vodShort.vod_id)
             vod_list.push(vodShort)
         }
         return vod_list
     }
-    async parseVodShortListFromDocByCategory(items) {
+    async parseVodShortListFromDocByCategory($,items) {
         let vod_list = []
 
         for (const item of items){
@@ -154,14 +163,6 @@ class RRYSSpider extends Spider {
         
         return vodDetail
     }
-        
-    // async testCategory() {
-    //     const link =  "https://www.rttks.com/rrtop/dzp/area/%E7%BE%8E%E5%9B%BD/class/page/2/year/2022.html"
-    //     const html = await this.request(link);
-    //     const $ = load(html);
-    //     const items = $('ul.stui-vodlist li');
-    //     this.vodList = await this.parseVodShortListFromDocByCategory(items);
-    // }
 }
 
 let spider = new RRYSSpider()
