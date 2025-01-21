@@ -1,5 +1,8 @@
-import {__jsEvalReturn} from '../js/rrys.js';
-
+// import {__jsEvalReturn} from '../js/rrys.js';
+// import { __jsEvalReturn} from '../js/kankan70.js';
+// import { __jsEvalReturn } from "./mp4movie.js";
+// import { __jsEvalReturn } from "./dygangs.js";
+import { __jsEvalReturn } from "./jianpian.js";
 import * as Utils from "../lib/utils.js";
 
 
@@ -73,12 +76,13 @@ async function test() {
 
     
     //测试首页列表
-    let homeVod = JSON.parse(await spider.homeVod())
+    let homeVod = JSON.parse(await spider.homeVod());
     console.debug(JSON.stringify(homeVod));
 
     // // 测试详情
-    let detail1 = JSON.parse(await spider.detail(homeVod.list[0].vod_id))
-    await testPlay(detail1)
+    let detail = JSON.parse(await spider.detail(homeVod.list[0].vod_id));
+    // let detail = JSON.parse(await spider.detail('/dsj/dlj/20700.html'));
+    await testPlay(detail)
 
     /***
      * 

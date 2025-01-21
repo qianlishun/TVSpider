@@ -196,7 +196,8 @@ class MoviePortSpider extends Spider {
     }
 
     async setDetail(id) {
-        let $ = await this.getHtml(id)
+        let detailUrl = this.siteUrl + id;
+        let $ = await this.getHtml(detailUrl);
         this.vodDetail = await this.parseVodDetailFromDoc($)
     }
 

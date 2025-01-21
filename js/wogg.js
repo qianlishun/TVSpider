@@ -28,7 +28,7 @@ class WoggSpider extends Spider {
 
 
     getName() {
-        return `💂‍┃阿里玩偶┃💂`
+        return "┃阿里玩偶┃"
     }
 
     getAppName() {

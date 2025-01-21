@@ -15,7 +15,7 @@ import {pipixiaMd5} from "../lib/pipiXiaObject.js"
 class PiPiXiaSpider extends Spider {
     constructor() {
         super();
-        this.siteUrl = "http://aikun.tv/"
+        this.siteUrl = "http://ppxys.vip/"
         this.pipixiaReconnectTimes = 0
     }
 
@@ -28,11 +28,11 @@ class PiPiXiaSpider extends Spider {
 
 
     getName() {
-        return `🦐┃皮皮虾影视┃🦐`
+        return "┃皮皮虾影视┃🦐"
     }
 
     getAppName() {
-        return `皮皮虾影视`
+        return "皮皮虾影视"
     }
 
     getJSName() {

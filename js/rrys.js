@@ -23,7 +23,7 @@ class RRYSSpider extends Spider {
     }
 
     getName() {
-        return "┃人人影视┃"
+        return `┃人人影视┃`
     }
 
     getAppName() {
